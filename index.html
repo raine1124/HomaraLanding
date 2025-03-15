@@ -1,1 +1,33 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homara</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- The loading animation will be inserted here via JavaScript -->
+    
+    <!-- Main content (hidden initially) -->
+    <div id="main-content" style="display: none;">
+        <div class="container">
+            <h1>Homara</h1>
+            <h2>You are early, join our email list for updates!</h2>
+            
+            <form id="email-form">
+                <div class="input-container">
+                    <input type="email" id="email-input" placeholder="Enter your email" required>
+                    <button type="submit" id="submit-btn">Submit</button>
+                </div>
+                <div id="submission-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="loading.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
