@@ -1,6 +1,7 @@
 // loading.js - Optimized loading animation with "Homara" text filling up then transforming to starfield
 
-export class LoadingAnimation {
+// Changed from export class to regular class for direct script inclusion
+class LoadingAnimation {
     constructor() {
         this.loadingContainer = null;
         this.loadingText = null;
@@ -17,7 +18,6 @@ export class LoadingAnimation {
         this.requestID = null;
     }
 
-    // Initialize the loading screen
     init() {
         // Create loading container
         this.loadingContainer = document.createElement('div');
@@ -121,7 +121,7 @@ export class LoadingAnimation {
         this.requestID = requestAnimationFrame(animateLoading);
     }
 
-    // Start the text-to-points transition
+    // All other methods unchanged from the original code
     startTextToPointsTransition() {
         // Cancel any existing animation frame
         if (this.requestID) {
@@ -147,7 +147,6 @@ export class LoadingAnimation {
         this.animatePointsMovement();
     }
     
-    // Create a canvas to analyze text pixels
     createTextCanvas() {
         // Get the text bounding rect
         const textRect = this.loadingText.getBoundingClientRect();
@@ -169,7 +168,6 @@ export class LoadingAnimation {
         this.canvasContext.fillText('HOMARA', canvas.width/2, canvas.height/2);
     }
     
-    // Create points from text
     createTextPoints() {
         // Get the text bounding rect
         const textRect = this.loadingText.getBoundingClientRect();
@@ -218,7 +216,6 @@ export class LoadingAnimation {
         }
     }
     
-    // Create a single text point
     createTextPoint(x, y) {
         const point = document.createElement('div');
         point.className = 'text-point';
@@ -263,7 +260,6 @@ export class LoadingAnimation {
         });
     }
     
-    // Create background starfield points
     createStarfieldPoints() {
         const starCount = 1000; // Fewer points for better performance
         
@@ -272,7 +268,6 @@ export class LoadingAnimation {
         }
     }
     
-    // Create a single star point
     createSingleStarPoint(isReplacement = false) {
         const point = document.createElement('div');
         point.className = 'star-point';
@@ -341,7 +336,6 @@ export class LoadingAnimation {
         return this.starfieldPoints.length - 1;
     }
     
-    // Animate text points moving toward viewer
     animatePointsMovement() {
         let lastTime = performance.now();
         const targetZ = 2000; // Z-position when points "pass" the viewer
@@ -427,19 +421,16 @@ export class LoadingAnimation {
         this.requestID = requestAnimationFrame(animate);
     }
     
-    // Start final transition sequence
     startFinalTransition() {
         // Start transition immediately after points pass
         this.triggerFadeTransition(800);
     }
     
-    // Simple fade transition to next screen - now instant
     triggerFadeTransition(duration) {
         // Skip fade animation and complete immediately
         this.completeAnimation();
     }
     
-    // Reset a star that's passed by the viewer
     resetStar(index) {
         const star = this.starfieldPoints[index];
         
@@ -466,7 +457,6 @@ export class LoadingAnimation {
         star.element.style.opacity = '0.7';
     }
 
-    // Complete the animation and transition to main content
     completeAnimation() {
         if (this.animationComplete) return;
         this.animationComplete = true;
@@ -491,12 +481,10 @@ export class LoadingAnimation {
         }, 1000);
     }
 
-    // Set a callback to be called when animation completes
     setOnComplete(callback) {
         this.onComplete = callback;
     }
 
-    // Update loading progress directly
     updateProgress(progress) {
         this.loadingProgress = progress;
     }
