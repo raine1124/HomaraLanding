@@ -119,14 +119,14 @@ function initializeFormHandler() {
 
 // Function to submit email to Airtable
 async function submitToAirtable(email) {
-    // Replace with your Airtable API endpoint and API key
-    const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/appOiZRfkxPWtmr0s/Homara';
-    const AIRTABLE_PAT = 'patz1qbofzglTYUKm.b999d0de5112e83fe6478ab1b89f1e7769def5f44764d633b5dfd5e07b302567';
+    // Replace with your Airtable endpoint and personal access token
+    const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/YOUR_BASE_ID/YOUR_TABLE_NAME';
+    const AIRTABLE_PAT = 'YOUR_PERSONAL_ACCESS_TOKEN';
     
     const response = await fetch(AIRTABLE_ENDPOINT, {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${AIRTABLE_API_KEY}`,
+            'Authorization': `Bearer ${AIRTABLE_PAT}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
