@@ -1,107 +1,123 @@
-/* Base styles */
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Procino', sans-serif;
 }
 
 body {
     background-color: #000;
     color: #fff;
-    font-family: Arial, sans-serif;
-    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
 }
 
-/* Main content container */
+/* Container */
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    padding: 2rem;
     text-align: center;
+    max-width: 600px;
+    padding: 40px 20px;
+    z-index: 1;
 }
 
 /* Typography */
 h1 {
-    font-size: 5rem;
-    font-weight: bold;
-    letter-spacing: 5px;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(to right, #ffffff, #cccccc);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    font-size: 48px;
+    margin-bottom: 20px;
 }
 
 h2 {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: normal;
-    margin-bottom: 3rem;
-    opacity: 0.9;
+    margin-bottom: 40px;
+    opacity: 0.8;
 }
 
-/* Form styling */
-#email-form {
-    width: 100%;
-    max-width: 500px;
-}
-
+/* Form */
 .input-container {
     display: flex;
-    width: 100%;
-    margin-bottom: 1rem;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    max-width: 100%;
+    margin-bottom: 20px;
 }
 
-input[type="email"] {
+#email-input {
     flex: 1;
-    padding: 1rem 1.5rem;
+    padding: 12px 15px;
     border: none;
-    font-size: 1rem;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #000;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
 }
 
-button {
-    padding: 1rem 1.5rem;
-    border: none;
-    background-color: #ffffff;
+#submit-btn {
+    padding: 12px 20px;
+    background: #fff;
     color: #000;
-    font-weight: bold;
+    border: none;
+    border-radius: 0 4px 4px 0;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 16px;
+    transition: background 0.3s;
 }
 
-button:hover {
-    background-color: #cccccc;
+#submit-btn:hover {
+    background: #ddd;
 }
 
-/* Submission message */
+#submit-btn:disabled {
+    background: #555;
+    cursor: not-allowed;
+}
+
 #submission-message {
-    height: 2rem;
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #4CAF50;
+    margin-top: 15px;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.3s;
 }
 
 #submission-message.show {
     opacity: 1;
 }
 
-/* Star effect for background - will be visible after loading */
+/* Star background effect */
 .star {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    background: white;
+    background-color: #fff;
     border-radius: 50%;
-    opacity: 0.5;
+}
+
+/* Loading animation */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#progress-bar {
+    width: 300px;
+    height: 5px;
+    background: #333;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#progress {
+    height: 100%;
+    width: 0%;
+    background: #fff;
+    border-radius: 5px;
+    transition: width 0.1s;
 }

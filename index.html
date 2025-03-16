@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homara</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        @font-face {
+            font-family: 'Procino';
+            src: url('path-to-procino-font.woff2') format('woff2'),
+                 url('path-to-procino-font.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        * {
+            font-family: 'Procino', sans-serif !important;
+        }
+    </style>
 </head>
 <body>
     <!-- The loading animation will be inserted here via JavaScript -->
@@ -25,6 +38,7 @@
         </div>
     </div>
 
+    
     <!-- Load scripts -->
     <script src="loading.js"></script>
     <script src="main.js"></script>

@@ -1,5 +1,7 @@
 // Initialize the application when the DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+
+        document.body.style.fontFamily = 'Procino, sans-serif';
     // Create and start loading animation
     const loadingAnimation = new LoadingAnimation();
     loadingAnimation.init();
@@ -83,8 +85,8 @@ function initializeFormHandler() {
         submitBtn.textContent = 'Submitting...';
         
         try {
-            // Submit to Airtable (replace with your Airtable API endpoint)
-            await submitToAirtable(email);
+            // Submit to Formspree
+            await submitToFormspree(email, form);
             
             // Clear the input
             emailInput.value = '';
@@ -117,32 +119,25 @@ function initializeFormHandler() {
     });
 }
 
-// Function to submit email to Airtable
-async function submitToAirtable(email) {
-    // Replace with your Airtable endpoint and personal access token
-    const AIRTABLE_ENDPOINT = 'https://api.airtable.com/v0/YOUR_BASE_ID/YOUR_TABLE_NAME';
-    const AIRTABLE_PAT = 'YOUR_PERSONAL_ACCESS_TOKEN';
+// Function to submit email to Formspree
+async function submitToFormspree(email, form) {
+    // Replace with your Formspree form ID
+    const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xgvavkwq'; // Replace with your form ID
     
-    const response = await fetch(AIRTABLE_ENDPOINT, {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('submitDate', new Date().toISOString());
+    
+    const response = await fetch(FORMSPREE_ENDPOINT, {
         method: 'POST',
+        body: formData,
         headers: {
-            'Authorization': `Bearer ${AIRTABLE_PAT}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            records: [
-                {
-                    fields: {
-                        Email: email,
-                        Date: new Date().toISOString()
-                    }
-                }
-            ]
-        })
+            'Accept': 'application/json'
+        }
     });
     
     if (!response.ok) {
-        throw new Error('Failed to submit to Airtable');
+        throw new Error('Failed to submit to Formspree');
     }
     
     return await response.json();
