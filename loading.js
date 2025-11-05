@@ -19,6 +19,9 @@ class LoadingAnimation {
     }
 
     init() {
+        // Get responsive configuration
+        const config = window.responsiveManager.getConfig();
+
         // Create loading container
         this.loadingContainer = document.createElement('div');
         this.loadingContainer.id = 'loading-container';
@@ -35,7 +38,7 @@ class LoadingAnimation {
             z-index: 1000;
             opacity: 1;
             transition: opacity .8s ease-out;
-            perspective: 800px;
+            perspective: ${config.perspective}px;
             overflow: hidden;
         `;
 
@@ -45,10 +48,10 @@ class LoadingAnimation {
         this.loadingText.textContent = 'HOMARA';
         this.loadingText.style.cssText = `
             font-family: Arial, sans-serif;
-            font-size: 7rem;
+            font-size: ${config.fontSize}rem;
             font-weight: bold;
             color: transparent;
-            letter-spacing: 5px;
+            letter-spacing: ${config.letterSpacing}px;
             position: relative;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             background: linear-gradient(to top, #ffffff 0%, transparent 0%);
@@ -148,20 +151,23 @@ class LoadingAnimation {
     }
     
     createTextCanvas() {
+        // Get responsive configuration
+        const config = window.responsiveManager.getConfig();
+
         // Get the text bounding rect
         const textRect = this.loadingText.getBoundingClientRect();
-        
+
         // Create a canvas element
         const canvas = document.createElement('canvas');
         canvas.width = textRect.width;
         canvas.height = textRect.height;
         this.canvasContext = canvas.getContext('2d');
-        
+
         // Clear canvas with transparent background
         this.canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Fill with text
-        this.canvasContext.font = 'bold 7rem Arial';
+
+        // Fill with text using responsive font size
+        this.canvasContext.font = config.canvasFontSize;
         this.canvasContext.fillStyle = 'white';
         this.canvasContext.textAlign = 'center';
         this.canvasContext.textBaseline = 'middle';
@@ -169,17 +175,20 @@ class LoadingAnimation {
     }
     
     createTextPoints() {
+        // Get responsive configuration
+        const config = window.responsiveManager.getConfig();
+
         // Get the text bounding rect
         const textRect = this.loadingText.getBoundingClientRect();
-        
+
         // Analyze the pixel data
-        const imageData = this.canvasContext.getImageData(0, 0, 
-            this.canvasContext.canvas.width, 
+        const imageData = this.canvasContext.getImageData(0, 0,
+            this.canvasContext.canvas.width,
             this.canvasContext.canvas.height);
         const pixels = imageData.data;
-        
-        // Sample pixels and create points where text exists
-        const textPointCount = 1200; // Density of points
+
+        // Sample pixels and create points where text exists - use responsive count
+        const textPointCount = config.textPointCount;
         const validPixels = [];
         
         // Create a map of text pixels
@@ -261,8 +270,10 @@ class LoadingAnimation {
     }
     
     createStarfieldPoints() {
-        const starCount = 1000; // Fewer points for better performance
-        
+        // Get responsive configuration
+        const config = window.responsiveManager.getConfig();
+        const starCount = config.starfieldPointCount;
+
         for (let i = 0; i < starCount; i++) {
             this.createSingleStarPoint(false);
         }
