@@ -1,0 +1,9 @@
+# robots.txt for Homara.community
+# This file tells search engines how to crawl your site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://homara.community/sitemap.xml
+
