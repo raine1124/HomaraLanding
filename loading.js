@@ -16,6 +16,7 @@ class LoadingAnimation {
         this.passedPointsCount = 0;
         this.totalTextPoints = 0;
         this.requestID = null;
+        this.pageLoadTime = performance.now();
     }
 
     init() {
@@ -149,12 +150,12 @@ class LoadingAnimation {
         // Start animating the points
         this.animatePointsMovement();
 
-        // Hard cutoff: Force completion after 5 seconds
+        // Safety fallback: Force completion after 10 seconds if something goes wrong
         setTimeout(() => {
             if (!this.animationComplete) {
                 this.completeAnimation();
             }
-        }, 5000);
+        }, 10000);
     }
     
     createTextCanvas() {
@@ -396,6 +397,31 @@ class LoadingAnimation {
 
                         // Hide the point once it passes
                         point.element.style.opacity = '0';
+
+                        // Check if 25% of points have passed the viewer
+                        const passedPercentage = (this.passedPointsCount / this.totalTextPoints) * 100;
+
+                        // Log milestone percentages
+                        if (this.passedPointsCount === 1) {
+                            const elapsed = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+                            console.log(`✨ First point passed at ${elapsed}s`);
+                        } else if (passedPercentage >= 25 && passedPercentage < 26) {
+                            const elapsed = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+                            console.log(`   25% of points passed at ${elapsed}s - triggering completion`);
+                        } else if (passedPercentage >= 50 && passedPercentage < 51) {
+                            const elapsed = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+                            console.log(`   50% of points passed at ${elapsed}s`);
+                        } else if (passedPercentage >= 75 && passedPercentage < 76) {
+                            const elapsed = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+                            console.log(`   75% of points passed at ${elapsed}s`);
+                        } else if (passedPercentage >= 90 && passedPercentage < 91) {
+                            const elapsed = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+                            console.log(`   90% of points passed at ${elapsed}s`);
+                        }
+
+                        if (passedPercentage >= 25 && !this.animationComplete) {
+                            this.completeAnimation();
+                        }
                     }
                 }
             }
@@ -474,20 +500,27 @@ class LoadingAnimation {
     completeAnimation() {
         if (this.animationComplete) return;
         this.animationComplete = true;
-        
+
+        // Log completion timing
+        const elapsedTime = ((performance.now() - this.pageLoadTime) / 1000).toFixed(2);
+        const passedPercentage = ((this.passedPointsCount / this.totalTextPoints) * 100).toFixed(1);
+        console.log(`🎯 Animation Complete!`);
+        console.log(`   Time since page load: ${elapsedTime} seconds`);
+        console.log(`   Points passed: ${this.passedPointsCount} / ${this.totalTextPoints} (${passedPercentage}%)`);
+
         // Fade out the loading container
         this.loadingContainer.style.opacity = '0';
-        
+
         // Clean up
         if (this.requestID) {
             cancelAnimationFrame(this.requestID);
             this.requestID = null;
         }
-        
+
         // Remove the loading container after fade out
         setTimeout(() => {
             document.body.removeChild(this.loadingContainer);
-            
+
             // Trigger the completion callback
             if (typeof this.onComplete === 'function') {
                 this.onComplete();
