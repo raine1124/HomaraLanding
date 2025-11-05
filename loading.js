@@ -131,23 +131,30 @@ class LoadingAnimation {
             cancelAnimationFrame(this.requestID);
             this.requestID = null;
         }
-        
+
         // Create a canvas to analyze the text pixels
         this.createTextCanvas();
-        
+
         // Create points based on the text shape
         this.createTextPoints();
         this.totalTextPoints = this.textPoints.length;
-        
+
         // Fade out the text while fading in the points
         this.loadingText.style.opacity = '0';
         this.pointsContainer.style.opacity = '1';
-        
+
         // Create background starfield
         this.createStarfieldPoints();
-        
+
         // Start animating the points
         this.animatePointsMovement();
+
+        // Hard cutoff: Force completion after 5 seconds
+        setTimeout(() => {
+            if (!this.animationComplete) {
+                this.completeAnimation();
+            }
+        }, 5000);
     }
     
     createTextCanvas() {
@@ -350,81 +357,77 @@ class LoadingAnimation {
     animatePointsMovement() {
         let lastTime = performance.now();
         const targetZ = 2000; // Z-position when points "pass" the viewer
-        
+
         const animate = (timestamp) => {
+            // Stop animating if animation is complete
+            if (this.animationComplete) {
+                return;
+            }
+
             // Calculate delta time for smoother animation
             const deltaTime = Math.min(32, timestamp - lastTime); // Cap at 32ms (30fps) to avoid jumps
             const timeScale = deltaTime / 16.67; // Scale relative to 60fps
             lastTime = timestamp;
-            
+
             // Move all text points
             for (let i = 0; i < this.textPoints.length; i++) {
                 const point = this.textPoints[i];
-                
+
                 // Skip if point has already passed and been counted
                 if (point.passed) continue;
-                
+
                 // Start after individual delay
                 if (timestamp - this.startTime > point.delay) {
                     // Move points with consistent speed scaled by deltaTime
                     point.x += point.speedX * timeScale;
                     point.y += point.speedY * timeScale;
                     point.z += point.speedZ * timeScale;
-                    
+
                     // Apply position changes
                     point.element.style.transform = `translate(-50%, -50%) translateZ(${point.z}px)`;
                     point.element.style.left = `${point.x}px`;
                     point.element.style.top = `${point.y}px`;
-                    
+
                     // Check if point reached viewer
                     if (point.z > targetZ) {
                         // Mark as passed and count it
                         point.passed = true;
                         this.passedPointsCount++;
-                        
+
                         // Hide the point once it passes
                         point.element.style.opacity = '0';
                     }
                 }
             }
-            
+
             // Move background starfield points
             for (let i = 0; i < this.starfieldPoints.length; i++) {
                 const star = this.starfieldPoints[i];
-                
+
                 if (!star.active) continue;
-                
+
                 // Move star with consistent speed scaled by deltaTime
                 star.z += star.speed * timeScale;
-                
+
                 // Gentle curve toward center
                 const viewWidth = window.innerWidth;
                 const viewHeight = window.innerHeight;
                 const curveStrength = 0.0001 * star.z;
-                
+
                 star.x += (viewWidth/2 - star.x) * curveStrength * timeScale;
                 star.y += (viewHeight/2 - star.y) * curveStrength * timeScale;
-                
+
                 // Update position
                 star.element.style.left = `${star.x}px`;
                 star.element.style.top = `${star.y}px`;
                 star.element.style.transform = `translate(-50%, -50%) translateZ(${star.z}px)`;
-                
-                // Reset if passed viewer
+
+                // Reset if passed viewer (keep recycling until hard cutoff)
                 if (star.z > 900) {
                     this.resetStar(i);
                 }
             }
-            
-            // Check if all text points have passed
-            if (this.passedPointsCount >= this.totalTextPoints * 0.3) { // Further reduced threshold
-                // Cancel animation and start transition sequence
-                cancelAnimationFrame(this.requestID);
-                this.requestID = null;
-                this.startFinalTransition();
-                return;
-            }
-            
+
             this.requestID = requestAnimationFrame(animate);
         };
         
@@ -434,10 +437,10 @@ class LoadingAnimation {
     
     startFinalTransition() {
         // Start transition immediately after points pass
-        this.triggerFadeTransition(800);
+        this.triggerFadeTransition();
     }
-    
-    triggerFadeTransition(duration) {
+
+    triggerFadeTransition() {
         // Skip fade animation and complete immediately
         this.completeAnimation();
     }
